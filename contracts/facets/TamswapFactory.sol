@@ -6,7 +6,7 @@ import {ITamswapFactory} from "../interfaces/ITamswapFactory.sol";
 import {LibTamFactory} from "../libraries/LibTamStorage.sol";
 
 contract TamswapFactory{
-    event PairCreated(address indexed token0, address indexed token1, address pair, uint256);
+    event PairCreated(address indexed _tokenX, address indexed _tokenY, address pair, uint256);
 
     //////ERROR//////
     error NotFeeToSetter();
@@ -21,7 +21,7 @@ contract TamswapFactory{
             revert IdenticalAddresses();
         }
         (address _tokenX, address _tokenY) = tokenX < tokenY ? (tokenX, tokenY) : (tokenY, tokenX);
-        if(tokenX == address(0) && tokenY == address(0)){
+        if(_tokenX == address(0)){
             revert AddressZero();
         }
 
