@@ -25,50 +25,27 @@ library LibTamFactory {
     }
 }
 
-library LibTamRouter1 {
-    bytes32 constant ROUTER1_STORAGE_POSITION = keccak256("diamond.standard.tamswap.router1.storage");
 
-    struct TamswapRouter1Storage {
+library LibTamswapRouter{
+    bytes32 constant ROUTER_STORAGE_POSITION = keccak256("diamond.standard.tamswap.router.storage");
+
+    struct TamswapRouterStorage {
         address WETH;
     }
 
-    function myRouter1Storage() internal pure returns (TamswapRouter1Storage storage r1s) {
-        bytes32 position = ROUTER1_STORAGE_POSITION;
+    function myRouterStorage() internal pure returns (TamswapRouterStorage storage rs) {
+        bytes32 position = ROUTER_STORAGE_POSITION;
         assembly {
-            r1s.slot := position
+            rs.slot := position
         }
     }
 
     function setWETHAddress(address _WETH) internal {
-        TamswapRouter1Storage storage r1s = myRouter1Storage();
-        r1s.WETH = _WETH;
+        TamswapRouterStorage storage rs = myRouterStorage();
+        rs.WETH = _WETH;
     }
 
     function getWETHAddress() internal view returns (address WETH) {
-        WETH = myRouter1Storage().WETH;
-    }
-}
-
-library LibTamRouter2 {
-    bytes32 constant ROUTER2_STORAGE_POSITION = keccak256("diamond.standard.tamswap.router2.storage");
-
-    struct TamswapRouter2Storage {
-        address WETH;
-    }
-
-    function myRouter2Storage() internal pure returns (TamswapRouter2Storage storage r2s) {
-        bytes32 position = ROUTER2_STORAGE_POSITION;
-        assembly {
-            r2s.slot := position
-        }
-    }
-
-    function setWETHAddress(address _WETH) internal {
-        TamswapRouter2Storage storage r1s = myRouter2Storage();
-        r1s.WETH = _WETH;
-    }
-
-    function getWETHAddress() internal view returns (address WETH) {
-        WETH = myRouter2Storage().WETH;
+        WETH = myRouterStorage().WETH;
     }
 }

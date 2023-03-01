@@ -13,9 +13,8 @@ import { IDiamondCut } from "./interfaces/IDiamondCut.sol";
 import "./libraries/LibTamStorage.sol";
 
 contract Diamond {   
-   LibTamRouter2.TamswapRouter2Storage internal r2s =  LibTamRouter2.myRouter2Storage();
-
-   constructor(address _contractOwner, address _diamondCutFacet, address _factory, address _WETH) payable {        
+   constructor(address _contractOwner, address _diamondCutFacet, address _WETH) payable {   
+        LibTamswapRouter.TamswapRouterStorage storage rs =  LibTamswapRouter.myRouterStorage();      
         LibDiamond.setContractOwner(_contractOwner);
         
         // Add the diamondCut external function from the diamondCutFacet
@@ -30,8 +29,7 @@ contract Diamond {
         LibDiamond.diamondCut(cut, address(0), "");   
 
 
-        LibTamRouter2.setFactoryAddress(_factory);
-        LibTamRouter2.setWETHAddress(_WETH);    
+        LibTamswapRouter.setWETHAddress(_WETH);    
     }
 
     // Find facet for function that is called and execute the
@@ -66,6 +64,7 @@ contract Diamond {
     }
 
     receive() external payable { 
-        assert(msg.sender == r2s.WETH); // only accept ETH via fallback from the WETH contract
+        LibTamswapRouter.TamswapRouterStorage storage rs =  LibTamswapRouter.myRouterStorage(); 
+        require(msg.sender == rs.WETH , "Not WETH contract"); // only accept ETH via fallback from the WETH contract
     }
 }

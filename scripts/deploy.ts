@@ -20,18 +20,26 @@ export async function deployDiamond() {
   await diamondCutFacet.deployed();
   console.log("DiamondCutFacet deployed:", diamondCutFacet.address);
 
-   // deploy tamswap LP token
-   const TamLPtoken = await ethers.getContractFactory("TamswapERC20");
-   const tamLPtoken = await TamLPtoken.deploy();
-   await tamLPtoken.deployed();
-   TamswapToken = tamLPtoken;
-   console.log("Deployed Tamswap LP token: ", tamLPtoken.address);
+  // deploy tamswap LP token
+  const TamLPtoken = await ethers.getContractFactory("TamswapERC20");
+  const tamLPtoken = await TamLPtoken.deploy();
+  await tamLPtoken.deployed();
+  TamswapToken = tamLPtoken;
+  console.log("Deployed Tamswap LP token: ", tamLPtoken.address);
+
+  // deploy WETH
+  const WETH = await ethers.getContractFactory("WETH");
+  const weth = await WETH.deploy();
+  await weth.deployed();
+
+  console.log("Deployed Weth token: ", weth.address);
 
   // deploy Diamond
   const Diamond = await ethers.getContractFactory("Diamond");
   const diamond = await Diamond.deploy(
     contractOwner.address,
-    diamondCutFacet.address
+    diamondCutFacet.address,
+    weth.address
   );
   await diamond.deployed();
   console.log("Diamond deployed:", diamond.address);
@@ -47,7 +55,7 @@ export async function deployDiamond() {
   // deploy facets
   console.log("");
   console.log("Deploying facets");
-  const FacetNames = ["DiamondLoupeFacet", "OwnershipFacet", "TamswapFactory", "TamswapRouter01", "TamswapRouter02"];
+  const FacetNames = ["DiamondLoupeFacet", "OwnershipFacet", "TamswapFactory", "TamswapRouter"];
   const cut = [];
   for (const FacetName of FacetNames) {
     const Facet = await ethers.getContractFactory(FacetName);
