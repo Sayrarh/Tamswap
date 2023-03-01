@@ -8,6 +8,7 @@ import { DiamondCutFacet } from "../typechain-types";
 import { getSelectors, FacetCutAction } from "./libraries/diamond";
 
 export let DiamondAddress: string;
+export let TamswapToken: any;
 
 export async function deployDiamond() {
   const accounts = await ethers.getSigners();
@@ -18,6 +19,13 @@ export async function deployDiamond() {
   const diamondCutFacet = await DiamondCutFacet.deploy();
   await diamondCutFacet.deployed();
   console.log("DiamondCutFacet deployed:", diamondCutFacet.address);
+
+   // deploy tamswap LP token
+   const TamLPtoken = await ethers.getContractFactory("TamswapERC20");
+   const tamLPtoken = await TamLPtoken.deploy();
+   await tamLPtoken.deployed();
+   TamswapToken = tamLPtoken;
+   console.log("Deployed Tamswap LP token: ", tamLPtoken.address);
 
   // deploy Diamond
   const Diamond = await ethers.getContractFactory("Diamond");
@@ -39,7 +47,7 @@ export async function deployDiamond() {
   // deploy facets
   console.log("");
   console.log("Deploying facets");
-  const FacetNames = ["DiamondLoupeFacet", "OwnershipFacet"];
+  const FacetNames = ["DiamondLoupeFacet", "OwnershipFacet", "TamswapFactory", "TamswapRouter01", "TamswapRouter02"];
   const cut = [];
   for (const FacetName of FacetNames) {
     const Facet = await ethers.getContractFactory(FacetName);

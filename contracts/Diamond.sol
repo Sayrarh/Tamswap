@@ -13,7 +13,6 @@ import { IDiamondCut } from "./interfaces/IDiamondCut.sol";
 import "./libraries/LibTamStorage.sol";
 
 contract Diamond {   
-   LibTamRouter1.TamswapRouter1Storage internal r1s =  LibTamRouter1.myRouter1Storage();
    LibTamRouter2.TamswapRouter2Storage internal r2s =  LibTamRouter2.myRouter2Storage();
 
    constructor(address _contractOwner, address _diamondCutFacet, address _factory, address _WETH) payable {        
