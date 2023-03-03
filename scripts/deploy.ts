@@ -8,7 +8,6 @@ import { DiamondCutFacet } from "../typechain-types";
 import { getSelectors, FacetCutAction } from "./libraries/diamond";
 
 export let DiamondAddress: string;
-export let TamswapToken: any;
 
 export async function deployDiamond() {
   const accounts = await ethers.getSigners();
@@ -19,13 +18,6 @@ export async function deployDiamond() {
   const diamondCutFacet = await DiamondCutFacet.deploy();
   await diamondCutFacet.deployed();
   console.log("DiamondCutFacet deployed:", diamondCutFacet.address);
-
-  // deploy tamswap LP token
-  const TamLPtoken = await ethers.getContractFactory("TamswapERC20");
-  const tamLPtoken = await TamLPtoken.deploy();
-  await tamLPtoken.deployed();
-  TamswapToken = tamLPtoken;
-  console.log("Deployed Tamswap LP token: ", tamLPtoken.address);
 
   // deploy WETH
   const WETH = await ethers.getContractFactory("WETH");

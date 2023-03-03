@@ -13,8 +13,7 @@ import { IDiamondCut } from "./interfaces/IDiamondCut.sol";
 import "./libraries/LibTamStorage.sol";
 
 contract Diamond {   
-   constructor(address _contractOwner, address _diamondCutFacet, address _WETH) payable {   
-        LibTamswapRouter.TamswapRouterStorage storage rs =  LibTamswapRouter.myRouterStorage();      
+   constructor(address _contractOwner, address _diamondCutFacet, address _WETH) payable {      
         LibDiamond.setContractOwner(_contractOwner);
         
         // Add the diamondCut external function from the diamondCutFacet

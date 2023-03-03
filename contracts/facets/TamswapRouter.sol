@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 import {ITamswapRouter} from "../interfaces/ITamswapRouter.sol";
 import {IERC20} from "../interfaces/IERC20.sol";
@@ -17,8 +17,7 @@ contract TamswapRouter is ITamswapRouter{
         _;
     }
 
-    function WETH() external view returns(address){
-        LibTamswapRouter.TamswapRouterStorage storage rs =  LibTamswapRouter.myRouterStorage(); 
+    function WETH() external override view returns(address){
         return LibTamswapRouter.getWETHAddress();
     }
 
@@ -32,12 +31,11 @@ contract TamswapRouter is ITamswapRouter{
         uint256 amountBMin
     ) internal virtual returns (uint256 amountA, uint256 amountB) {
         // create the pair if it doesn't exist yet
-        LibTamswapRouter.TamswapRouterStorage storage rs =  LibTamswapRouter.myRouterStorage(); 
         if (ITamswapFactory(address(this)).getPair(tokenA, tokenB) == address(0)) {
             ITamswapFactory(address(this)).createPair(tokenA, tokenB);
         }
 
-        (uint reserveA, uint reserveB) = TamswapLibrary.getReserves(r2s.factory, tokenA, tokenB);
+        (uint reserveA, uint reserveB) = TamswapLibrary.getReserves(address(this), tokenA, tokenB);
         if (reserveA == 0 && reserveB == 0) {
             (amountA, amountB) = (amountADesired, amountBDesired);
         } else {
@@ -109,8 +107,6 @@ contract TamswapRouter is ITamswapRouter{
         uint256 deadline
     ) public virtual override ensure(deadline) returns (uint256 amountA, uint256 amountB) {
 
-        LibTamswapRouter.TamswapRouterStorage storage rs =  LibTamswapRouter.myRouterStorage();
-
         address pair = TamswapLibrary.pairFor(address(this), tokenA, tokenB);
         ITamswapPair(pair).transferFrom(msg.sender, pair, liquidity); // send liquidity to pair
         (uint256 amount0, uint256 amount1) = ITamswapPair(pair).burn(to);
@@ -155,8 +151,6 @@ contract TamswapRouter is ITamswapRouter{
         uint256 deadline,
         bool approveMax, uint8 v, bytes32 r, bytes32 s
     ) external virtual override returns (uint256 amountA, uint256 amountB) {
-
-        LibTamswapRouter.TamswapRouterStorage storage rs =  LibTamswapRouter.myRouterStorage(); 
 
         address pair = TamswapLibrary.pairFor(address(this), tokenA, tokenB);
         uint value = approveMax ? type(uint256).max : liquidity;
@@ -230,8 +224,7 @@ contract TamswapRouter is ITamswapRouter{
 
     // **** SWAP ****
     // requires the initial amount to have already been sent to the first pair
-    function _swap(uint256[] memory amounts, address[] memory path, address _to) internal virtual {
-        LibTamswapRouter.TamswapRouterStorage storage rs =  LibTamswapRouter.myRouterStorage(); 
+    function _swap(uint256[] memory amounts, address[] memory path, address _to) internal virtual { 
         for (uint256 i; i < path.length - 1; i++) {
             (address input, address output) = (path[i], path[i + 1]);
             (address token0,) = TamswapLibrary.sortTokens(input, output);
@@ -252,8 +245,6 @@ contract TamswapRouter is ITamswapRouter{
         uint256 deadline
     ) external virtual override ensure(deadline) returns (uint256[] memory amounts) {
 
-        LibTamswapRouter.TamswapRouterStorage storage rs =  LibTamswapRouter.myRouterStorage(); 
-
         amounts = TamswapLibrary.getAmountsOut(address(this), amountIn, path);
         require(amounts[amounts.length - 1] >= amountOutMin, 'TamswapRouter: INSUFFICIENT_OUTPUT_AMOUNT');
         TransferHelper.safeTransferFrom(
@@ -270,8 +261,6 @@ contract TamswapRouter is ITamswapRouter{
         address to,
         uint256 deadline
     ) external virtual override ensure(deadline) returns (uint256[] memory amounts) {
-
-        LibTamswapRouter.TamswapRouterStorage storage rs =  LibTamswapRouter.myRouterStorage(); 
 
         amounts = TamswapLibrary.getAmountsIn(address(this), amountOut, path);
         require(amounts[0] <= amountInMax, 'TamswapRouter: EXCESSIVE_INPUT_AMOUNT');
@@ -293,7 +282,7 @@ contract TamswapRouter is ITamswapRouter{
         LibTamswapRouter.TamswapRouterStorage storage rs =  LibTamswapRouter.myRouterStorage(); 
 
         require(path[0] == rs.WETH, 'TamswapRouter: INVALID_PATH');
-        amounts = TamswapLibrary.getAmountsOut(r2s.factory, msg.value, path);
+        amounts = TamswapLibrary.getAmountsOut(address(this), msg.value, path);
         require(amounts[amounts.length - 1] >= amountOutMin, 'TamswapRouter: INSUFFICIENT_OUTPUT_AMOUNT');
         IWETH(rs.WETH).deposit{value: amounts[0]}();
         assert(IWETH(rs.WETH).transfer(TamswapLibrary.pairFor(address(this), path[0], path[1]), amounts[0]));
@@ -369,7 +358,6 @@ contract TamswapRouter is ITamswapRouter{
     // requires the initial amount to have already been sent to the first pair
     function _swapSupportingFeeOnTransferTokens(address[] memory path, address _to) internal virtual {
         
-        LibTamswapRouter.TamswapRouterStorage storage rs =  LibTamswapRouter.myRouterStorage(); 
 
         for (uint256 i; i < path.length - 1; i++) {
             (address input, address output) = (path[i], path[i + 1]);
@@ -398,7 +386,6 @@ contract TamswapRouter is ITamswapRouter{
         address to,
         uint256 deadline
     ) external virtual override ensure(deadline) {
-         LibTamswapRouter.TamswapRouterStorage storage rs =  LibTamswapRouter.myRouterStorage(); 
 
         TransferHelper.safeTransferFrom(
             path[0], msg.sender, TamswapLibrary.pairFor(address(this), path[0], path[1]), amountIn
@@ -495,7 +482,6 @@ contract TamswapRouter is ITamswapRouter{
         override
         returns (uint256[] memory amounts)
     {
-        LibTamswapRouter.TamswapRouterStorage storage rs =  LibTamswapRouter.myRouterStorage(); 
         return TamswapLibrary.getAmountsOut(address(this), amountIn, path);
     }
 
@@ -506,7 +492,6 @@ contract TamswapRouter is ITamswapRouter{
         override
         returns (uint256[] memory amounts)
     {
-         LibTamswapRouter.TamswapRouterStorage storage rs =  LibTamswapRouter.myRouterStorage(); 
         return TamswapLibrary.getAmountsIn(address(this), amountOut, path);
     }
 }

@@ -29,7 +29,7 @@ module.exports = {
       timeout: 8000000,
     },
     kovan: {
-      url: process.env.KOVAN_URL,
+      url: process.env.GOERLI_API,
       accounts: [process.env.SECRET],
       blockGasLimit: 200000000000,
       gasPrice: 10000000000,
@@ -49,6 +49,9 @@ module.exports = {
   // This is a sample solc configuration that specifies which version of solc to use
   solidity: {
     compilers: [
+      {
+        version: "0.8.0",
+      },
       {
         version: "0.8.4",
         settings: {

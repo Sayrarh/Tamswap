@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 interface ITamswapFactory {
+
     event PairCreated(address indexed _tokenX, address indexed _tokenY, address pair, uint);
 
     function feeTo() external view returns (address);

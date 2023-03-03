@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 import "../utils/TamswapPair.sol";
 import {ITamswapFactory} from "../interfaces/ITamswapFactory.sol";
 import {LibTamFactory} from "../libraries/LibTamStorage.sol";
 
 contract TamswapFactory{
-    event PairCreated(address indexed _tokenX, address indexed _tokenY, address pair, uint256);
+
+    event PairCreated(address indexed _tokenX, address indexed _tokenY, address pair, uint256 pr);
 
     //////ERROR//////
     error NotFeeToSetter();
     error IdenticalAddresses();
     error AddressZero();
-
 
     //The createPair() creates a new TamswapPair contract for a given pair of tokens tokenX and tokenY.
     function createPair(address tokenX, address tokenY) external returns(address pairContractAddress){
