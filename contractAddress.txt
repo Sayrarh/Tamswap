@@ -1,0 +1,10 @@
+DiamondCutFacet deployed: 0xF939F9c16cA292c965386b3266491D6A5dE11209
+Deployed Weth token:  0xBf8E178bbb121587B168dCc2F8aecBb1B0acddfe
+Diamond deployed: 0xf18211b0C44470a8AA5Fb03d96d06A1cDfc397b9
+DiamondInit deployed: 0x7439e775126Ecb1ACf62D6483B044e2e05870AC9
+
+Deploying facets
+DiamondLoupeFacet deployed: 0xB1defbf1170600c718A63185aeD8599B910ca0e6
+OwnershipFacet deployed: 0xE3544cEf2848c4FDB51c20f930ED8d650D07d2be
+TamswapFactory deployed: 0xc310e5cD4Bd7b7c52c119a3b61D392DD7D7bF47e
+TamswapRouter deployed: 0xd9373dca2A95Df1512e4e3C4d07018fD2C3e6415

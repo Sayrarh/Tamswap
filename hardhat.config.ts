@@ -28,8 +28,8 @@ module.exports = {
     localhost: {
       timeout: 8000000,
     },
-    kovan: {
-      url: process.env.GOERLI_API,
+    mumbai: {
+      url: process.env.MUMBAI_API,
       accounts: [process.env.SECRET],
       blockGasLimit: 200000000000,
       gasPrice: 10000000000,
